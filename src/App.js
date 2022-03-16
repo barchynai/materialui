@@ -1,23 +1,38 @@
-import logo from './logo.svg';
+import {useEffect, useState} from 'react';
 import './App.css';
+import Cart from './components/Cart';
+import Products from './components/Products';
+import axiosInstance from './helpers/Axios';
+import { Grid } from '@mui/material';
 
 function App() {
+
+  const [allProducts, setAllProducts] = useState([])
+
+  const [cart, setTocart] = useState([])
+
+  const callApi = async() => {
+    const url = "products/"
+    const req = await axiosInstance.get(url)
+    setAllProducts(req.data)
+  }
+
+  useEffect(()=>{
+
+    callApi()
+  
+  },[])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Grid container>
+        <Grid item xs={8}>
+           <Products data ={allProducts} setTocart={setTocart}/>
+         </Grid>
+        <Grid item xs={2}>
+          <Cart cart={cart}/>
+         </Grid>
+      </Grid>
     </div>
   );
 }
